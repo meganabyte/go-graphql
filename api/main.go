@@ -7,13 +7,10 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"os"
+	"github.com/meganabyte/helptree/api/oauth"
 )
 
-var (
-	googleOauthConfig *oauth2.Config
-	// TODO: randomize it
-	oauthStateString = "pseudo-random"
-)
+
 
 func init() {
 	googleOauthConfig = &oauth2.Config{
@@ -26,6 +23,7 @@ func init() {
 }
 
 func main() {
+	oauth.Init()
 	http.HandleFunc("/", handleMain)
 	http.HandleFunc("/login", handleLogin)
 	http.HandleFunc("/callback", handleCallback)

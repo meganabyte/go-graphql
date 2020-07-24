@@ -15,7 +15,7 @@ var (
 	oauthStateString = "pseudo-random"
 )
 
-func init() {
+func Init() {
 	googleOauthConfig = &oauth2.Config{
 		RedirectURL:  "http://localhost:8080/callback",
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
@@ -25,7 +25,7 @@ func init() {
 	}
 }
 
-func handleMain(w http.ResponseWriter, r *http.Request) {
+func HandleMain(w http.ResponseWriter, r *http.Request) {
 	var htmlIndex = `<html>
 	<body>
 		<a href="/login">Google Log In</a>
@@ -35,12 +35,12 @@ func handleMain(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, htmlIndex)
 }
 
-func handleLogin(w http.ResponseWriter, r *http.Request) {
+func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	url := googleOauthConfig.AuthCodeURL(oauthStateString)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
-func handleCallback(w http.ResponseWriter, r *http.Request) {
+func HandleCallback(w http.ResponseWriter, r *http.Request) {
 	content, err := getUserInfo(r.FormValue("state"), r.FormValue("code"))
 	if err != nil {
 		fmt.Println(err.Error())
