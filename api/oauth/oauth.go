@@ -11,7 +11,6 @@ import (
 
 var (
 	googleOauthConfig *oauth2.Config
-	// TODO: randomize it
 	oauthStateString = "pseudo-random"
 )
 
@@ -25,6 +24,7 @@ func init() {
 	}
 }
 
+// HandleMain serves the basic HTML for the landing page
 func HandleMain(w http.ResponseWriter, r *http.Request) {
 	var htmlIndex = `<html>
 	<body>
@@ -35,11 +35,13 @@ func HandleMain(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, htmlIndex)
 }
 
+// HandleLogin gets a url based on pseudo-random state that requests the defined scopes
 func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	url := googleOauthConfig.AuthCodeURL(oauthStateString)
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
+// HandleCallback returns the requested user info and prints it
 func HandleCallback(w http.ResponseWriter, r *http.Request) {
 	content, err := getUserInfo(r.FormValue("state"), r.FormValue("code"))
 	if err != nil {
@@ -47,7 +49,7 @@ func HandleCallback(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	fmt.Fprintf(w, "Content: %s\n", content)
+	fmt.Println(string(content))
 }
 
 func getUserInfo(state string, code string) ([]byte, error) {
