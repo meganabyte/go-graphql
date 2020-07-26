@@ -61,7 +61,6 @@ body {
     height: 70px;
     background-color: #FFBD1D;
     color: white;
-    font-weight: bold;
 }
 
 .social-link img {
@@ -100,6 +99,7 @@ body {
     padding: .75rem 1.5rem;
     border-radius: .5rem;
     text-decoration: none;
+    text-align: center;
     font-size: .9rem;
     outline: none;
     border: none;
