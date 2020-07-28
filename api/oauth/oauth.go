@@ -7,6 +7,7 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 	"os"
+	"html/template"
 )
 
 var (
@@ -26,13 +27,16 @@ func init() {
 
 // HandleMain serves the basic HTML for the landing page
 func HandleMain(w http.ResponseWriter, r *http.Request) {
-	var htmlIndex = `<html>
-	<body>
-		<a href="/login">Google Log In</a>
-	</body>
-	</html>`
-
-	fmt.Fprintf(w, htmlIndex)
+	t, err := template.ParseFiles("../client/index.html")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	err = t.Execute(w, nil)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 }
 
 // HandleLogin gets a url based on pseudo-random state that requests the defined scopes
