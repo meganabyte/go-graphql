@@ -17,9 +17,9 @@ func main() {
 	http.HandleFunc("/", oauth.HandleMain)
 	http.HandleFunc("/login", oauth.HandleLogin)
 	http.HandleFunc("/callback", oauth.HandleCallback)
-	http.HandleFunc("/dashboard", NotImplemented)
+	http.HandleFunc("/dashboard", oauth.HandleDashboard)
 	http.HandleFunc("/dashboard/starred", NotImplemented)
-	http.HandleFunc("/logout", NotImplemented)
+	http.HandleFunc("/logout", oauth.HandleLogout)
 
 	fmt.Println(http.ListenAndServe(":8080", nil))
 }

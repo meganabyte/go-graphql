@@ -9,11 +9,15 @@ import (
 	"os"
 	"html/template"
 	"encoding/json"
+	"github.com/gorilla/sessions"
+	"github.com/gorilla/securecookie"
 )
 
 var (
 	googleOauthConfig *oauth2.Config
 	oauthStateString = "pseudo-random"
+	key = securecookie.GenerateRandomKey(32)
+    store = sessions.NewCookieStore(key)
 )
 
 // User is a retrieved & authenticated user
@@ -38,6 +42,8 @@ func init() {
 		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"},
 		Endpoint:     google.Endpoint,
 	}
+
+	
 }
 
 // HandleMain serves the basic HTML for the landing page
@@ -60,8 +66,9 @@ func HandleLogin(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, url, http.StatusTemporaryRedirect)
 }
 
-// HandleCallback returns the requested user info and prints it
+// HandleCallback gets the requested user info and prints it
 func HandleCallback(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "cookie-name")
 	content, err := getUserInfo(r.FormValue("state"), r.FormValue("code"))
 	if err != nil {
 		fmt.Println(err.Error())
@@ -77,7 +84,37 @@ func HandleCallback(w http.ResponseWriter, r *http.Request) {
 	// lookup user in database
 		// if not in database, create new user from google data
 	// return user and log them in 
+
+	// set user as authenticated
+	session.Values["authenticated"] = true
+    session.Save(r, w)
 	fmt.Println(u)
+}
+
+// HandleDashboard will serve the project dashboard for an authenticated user
+func HandleDashboard(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "cookie-name")
+	// Check if user is authenticated
+	if auth, ok := session.Values["authenticated"].(bool); !ok || !auth {
+        http.Redirect(w, r, "/login", http.StatusTemporaryRedirect)
+        return
+	}
+	fmt.Fprintln(w, "Secret Message!!!")
+
+}
+
+// HandleDashboardStarred will serve the starred projects of a user
+func HandleDashboardStarred(w http.ResponseWriter, r *http.Request) {
+
+}
+
+// HandleLogout ends the authenticated user's session
+func HandleLogout(w http.ResponseWriter, r *http.Request) {
+	session, _ := store.Get(r, "cookie-name")
+
+	// Revoke user authentication
+	session.Values["authenticated"] = false
+    session.Save(r, w)
 }
 
 func getUserInfo(state string, code string) ([]byte, error) {
