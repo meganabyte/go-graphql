@@ -1,4 +1,4 @@
-package oauth
+package handlers
 
 import (
 	"fmt"
@@ -11,6 +11,7 @@ import (
 	"encoding/json"
 	"github.com/gorilla/sessions"
 	"github.com/gorilla/securecookie"
+	"api/types"
 )
 
 var (
@@ -20,26 +21,14 @@ var (
     store = sessions.NewCookieStore(key)
 )
 
-// User is a retrieved & authenticated user
-type User struct {
-    ID string `json:"id"`
-    Email string `json:"email"`
-    VerifiedEmail bool `json:"verified_email"`
-    Name string `json:"name"`
-    FirstName string `json:"given_name"`
-    LastName string `json:"family_name"`
-    Picture string `json:"picture"`
-    Locale string `json:"locale"`
-    HD string `json:"hd"`
-}
-
 
 func init() {
 	googleOauthConfig = &oauth2.Config{
 		RedirectURL:  "http://localhost:8080/callback",
 		ClientID:     os.Getenv("GOOGLE_CLIENT_ID"),
 		ClientSecret: os.Getenv("GOOGLE_CLIENT_SECRET"),
-		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email"},
+		Scopes:       []string{"https://www.googleapis.com/auth/userinfo.profile", 
+							   "https://www.googleapis.com/auth/userinfo.email"},
 		Endpoint:     google.Endpoint,
 	}
 
@@ -75,20 +64,20 @@ func HandleCallback(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
-	u := User{}
-	if err = json.Unmarshal(content, &u); err != nil {
+	g := types.GoogleUser{}
+	if err = json.Unmarshal(content, &g); err != nil {
 		fmt.Println(err.Error())
 		http.Redirect(w, r, "/", http.StatusTemporaryRedirect)
 		return
 	}
+	fmt.Println(g)
 	// lookup user in database
 		// if not in database, create new user from google data
 	// return user and log them in 
 
-	// set user as authenticated
+	// Set user as authenticated
 	session.Values["authenticated"] = true
     session.Save(r, w)
-	fmt.Println(u)
 }
 
 // HandleDashboard will serve the project dashboard for an authenticated user
