@@ -72,12 +72,12 @@ func HandleCallback(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(g)
 	// lookup user in database
-		// if not in database, create new user from google data
-	// return user and log them in 
+	// if not in database, create new user from google data & save
 
 	// Set user as authenticated
 	session.Values["authenticated"] = true
-    session.Save(r, w)
+	session.Save(r, w)
+	isStudent(g) // returns bool
 }
 
 // HandleDashboard will serve the project dashboard for an authenticated user
@@ -126,6 +126,11 @@ func getUserInfo(state string, code string) ([]byte, error) {
 	if err != nil {
 		return nil, fmt.Errorf("failed reading response body: %s", err.Error())
 	}
-
 	return contents, nil
+}
+
+func isStudent(g types.GoogleUser) bool {
+	email := g.Email
+	index := len(email) - 4
+	return email[index:] == ".edu" 	
 }
