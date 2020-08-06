@@ -4,11 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"api/handlers"
-	"log"
-	"context"
-	//"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
+	"api/types"
 )
 
 // NotImplemented message will be returned if handler not done
@@ -18,7 +14,6 @@ var NotImplemented = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reques
 
 
 func main() {
-
 	http.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("../client"))))
 	http.HandleFunc("/", handlers.HandleMain)
 	http.HandleFunc("/login", handlers.HandleLogin)
@@ -28,17 +23,30 @@ func main() {
 	http.HandleFunc("/logout", handlers.HandleLogout)
 	fmt.Println(http.ListenAndServe(":8080", nil))
 
+	projects := populate()
+	
 
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
-	client, err := mongo.Connect(context.TODO(), clientOptions)
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = client.Ping(context.TODO(), nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println("Connected to MongoDB!")
+
 }
 
+func populate() []types.Project {
+    author := &types.Guest{Email: "megbobba@gmail.com", Name: "Megana Bobba"}
+    project := types.Project{
+		ID: 1,
+        Stars : 0,
+		Author : *author,
+		DatePosted : "August 2050",
+		Title : "Marketing for small candle-making business",
+		Description : "Hello world hello world hello world hello world hello world",
+		Funding : 700,
+		AreaOfStudy : "Business",
+		IsRemote : false,
+		Location: 94024,
+		IsActive :true,
+    }
 
+    var projects []types.Project
+    projects = append(projects, project)
+
+    return projects
+}
