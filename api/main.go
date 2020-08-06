@@ -2,18 +2,31 @@ package main
 
 import (
 	"fmt"
-	"net/http"
-	"api/handlers"
-	"api/types"
+	//"net/http"
+	//"api/handlers"
+	"github.com/graphql-go/graphql"
+	"log"
+	"encoding/json"
+	"api/queries"
 )
+
+/*
 
 // NotImplemented message will be returned if handler not done
 var NotImplemented = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request){
 	w.Write([]byte("Not Implemented"))
 })  
 
+*/
+
+var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
+	Query: queries.RootQuery,
+})
+
 
 func main() {
+	/*
+
 	http.Handle("/client/", http.StripPrefix("/client/", http.FileServer(http.Dir("../client"))))
 	http.HandleFunc("/", handlers.HandleMain)
 	http.HandleFunc("/login", handlers.HandleLogin)
@@ -23,30 +36,31 @@ func main() {
 	http.HandleFunc("/logout", handlers.HandleLogout)
 	fmt.Println(http.ListenAndServe(":8080", nil))
 
-	projects := populate()
-	
+	*/
 
+
+	// Query
+	query := `
+		{
+			allprojects {
+				Stars
+				Title
+				DatePosted
+				Author {
+					Name
+					Projects
+				}
+			}
+		}
+	`
+	params := graphql.Params{Schema: schema, RequestString: query}
+	r := graphql.Do(params)
+	if len(r.Errors) > 0 {
+		log.Fatalf("failed to execute graphql operation, errors: %+v", r.Errors)
+	}
+	rJSON, _ := json.Marshal(r)
+	fmt.Printf("%s \n", rJSON)
 
 }
 
-func populate() []types.Project {
-    author := &types.Guest{Email: "megbobba@gmail.com", Name: "Megana Bobba"}
-    project := types.Project{
-		ID: 1,
-        Stars : 0,
-		Author : *author,
-		DatePosted : "August 2050",
-		Title : "Marketing for small candle-making business",
-		Description : "Hello world hello world hello world hello world hello world",
-		Funding : 700,
-		AreaOfStudy : "Business",
-		IsRemote : false,
-		Location: 94024,
-		IsActive :true,
-    }
 
-    var projects []types.Project
-    projects = append(projects, project)
-
-    return projects
-}
