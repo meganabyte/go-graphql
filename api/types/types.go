@@ -17,7 +17,7 @@ type GoogleUser struct {
     HD string `json:"hd"`
 }
 
-// Project is ....
+// Project is a seedspace project
 type Project struct {
 	ID int
 	Stars int
@@ -33,7 +33,7 @@ type Project struct {
 }
 
 
-// Student is ....
+// Student is a seedspace student account
 type Student struct {
 	Email string 
 	Name string 
@@ -41,14 +41,14 @@ type Student struct {
 }
 
 
-// Guest is ....
+// Guest is is a seedspace guest account
 type Guest struct {
 	Email string 
 	Name string 
-	Projects []int	// opened projects ()
+	Projects []int	// opened projects
 }
 
-// ProjectType is ....
+// ProjectType is a graphql type for Project
 var ProjectType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "Project",
@@ -60,7 +60,7 @@ var ProjectType = graphql.NewObject(
 				Type: graphql.Int,
 			},
 			"Author": &graphql.Field{
-				Type: GuestType, // FIX
+				Type: GuestType, 
 			},
 			"DatePosted": &graphql.Field{
 				Type: graphql.String,
@@ -90,7 +90,7 @@ var ProjectType = graphql.NewObject(
 	},
 )
 
-// GuestType is ...
+// GuestType is a graphql type for Guest
 var GuestType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "Guest",
@@ -108,7 +108,7 @@ var GuestType = graphql.NewObject(
 	},
 )
 
-// StudentType is ...
+// StudentType is a graphql type for Student
 var StudentType = graphql.NewObject(
 	graphql.ObjectConfig{
 		Name: "Student",

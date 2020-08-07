@@ -8,6 +8,7 @@ import (
 	"log"
 	"encoding/json"
 	"api/queries"
+	"api/mutations"
 )
 
 /*
@@ -21,6 +22,7 @@ var NotImplemented = http.HandlerFunc(func(w http.ResponseWriter, r *http.Reques
 
 var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
 	Query: queries.RootQuery,
+	Mutation: mutations.RootMutation,
 })
 
 
@@ -39,21 +41,15 @@ func main() {
 	*/
 
 
-	// Query
-	query := `
+	// Query or mutation
+	request := `
 		{
-			allprojects {
-				Stars
+			allProjects {
 				Title
-				DatePosted
-				Author {
-					Name
-					Projects
-				}
 			}
 		}
 	`
-	params := graphql.Params{Schema: schema, RequestString: query}
+	params := graphql.Params{Schema: schema, RequestString: request}
 	r := graphql.Do(params)
 	if len(r.Errors) > 0 {
 		log.Fatalf("failed to execute graphql operation, errors: %+v", r.Errors)
