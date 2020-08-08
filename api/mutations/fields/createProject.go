@@ -1,9 +1,12 @@
 package fields
 
 import (
+	"context"
 	"github.com/graphql-go/graphql"
-	//"api/data"
+	"api/data"
 	"api/types"
+	"log"
+	"fmt"
 )
 
 
@@ -50,14 +53,19 @@ var CreateProject = &graphql.Field {
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 		project := types.Project{
 			Title: params.Args["Title"].(string),
-			
+			// ....
 		}
-		//insert into db
+		createProject(project)
 		return project, nil
 	},
 }
 
 
-func save() {
-
+func createProject(project types.Project) {
+	projectCollection := mongo.Client.Database("seedspace").Collection("projects")
+	insertResult, err := projectCollection.InsertOne(context.TODO(), project)
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
 }

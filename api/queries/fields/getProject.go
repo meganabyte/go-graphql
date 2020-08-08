@@ -1,10 +1,13 @@
 package fields
 
 import (
+	"context"
 	"github.com/graphql-go/graphql"
-	//"go.mongodb.org/mongo-driver/bson"	
-	//"api/data"
+	"api/data"
 	"api/types"
+	"go.mongodb.org/mongo-driver/bson"
+	"log"
+	"fmt"
 )
 
 // Project is a field to get a project by ID
@@ -17,11 +20,19 @@ var Project = &graphql.Field {
 		},
 	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-		// get project from database
+		var result types.Project
+		id, ok := p.Args["id"].(int)
+		if ok {
+			filter := bson.D{{"ID", id}}
+			projectCollection := mongo.Client.Database("seedspace").Collection("projects")
+			err := projectCollection.FindOne(context.TODO(), filter).Decode(&result)
+			if err != nil {
+				log.Fatal(err)
+			}
+			fmt.Printf("Found a single document: %+v\n", result)
+			return result, nil
+		}
 		return nil, nil
 	},
 }
 
-func add() {
-
-}

@@ -43,11 +43,11 @@ func main() {
 
 	// Query or mutation
 	request := `
-		{
-			allProjects {
-				Title
+			mutation {
+				createProject(Title: "Hello World") {
+					Title
+				}
 			}
-		}
 	`
 	params := graphql.Params{Schema: schema, RequestString: request}
 	r := graphql.Do(params)
