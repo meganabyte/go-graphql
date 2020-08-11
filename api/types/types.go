@@ -19,7 +19,7 @@ type GoogleUser struct {
 
 // Project is a seedspace project
 type Project struct {
-	ID int
+	ID int `bson:"id"`
 	Stars int
 	Author Guest
 	DatePosted string
@@ -35,7 +35,7 @@ type Project struct {
 
 // Student is a seedspace student account
 type Student struct {
-	Email string 
+	Email string `bson:"email"`
 	Name string 
 	Projects []Project	// starred projects
 }
@@ -43,7 +43,7 @@ type Student struct {
 
 // Guest is is a seedspace guest account
 type Guest struct {
-	Email string 
+	Email string `bson:"email"`
 	Name string 
 	Projects []int	// opened projects
 }

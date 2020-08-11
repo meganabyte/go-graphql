@@ -52,7 +52,8 @@ var CreateProject = &graphql.Field {
 	
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 		project := types.Project{
-			Title: params.Args["Title"].(string),
+			ID: params.Args["ID"].(int),
+			//Title: params.Args["Title"].(string),
 			// ....
 		}
 		createProject(project)
@@ -63,7 +64,7 @@ var CreateProject = &graphql.Field {
 
 func createProject(project types.Project) {
 	projectCollection := mongo.Client.Database("seedspace").Collection("projects")
-	insertResult, err := projectCollection.InsertOne(context.TODO(), project)
+	insertResult, err := projectCollection.InsertOne(context.Background(), project)
 	if err != nil {
 		log.Fatal(err)
 	}

@@ -21,11 +21,11 @@ var Project = &graphql.Field {
 	},
 	Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 		var result types.Project
-		id, ok := p.Args["id"].(int)
+		id, ok := p.Args["ID"].(int)
 		if ok {
-			filter := bson.D{{"ID", id}}
+			filter := bson.D{{Key:"id", Value:id}}
 			projectCollection := mongo.Client.Database("seedspace").Collection("projects")
-			err := projectCollection.FindOne(context.TODO(), filter).Decode(&result)
+			err := projectCollection.FindOne(context.Background(), filter).Decode(&result)
 			if err != nil {
 				log.Fatal(err)
 			}

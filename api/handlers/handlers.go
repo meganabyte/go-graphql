@@ -77,7 +77,7 @@ func HandleCallback(w http.ResponseWriter, r *http.Request) {
 	// Set user as authenticated
 	session.Values["authenticated"] = true
 	session.Save(r, w)
-	isStudent(g) // returns bool
+	fmt.Fprintln(w, "This user is a student:", isStudent(g))
 }
 
 // HandleDashboard will serve the project dashboard for an authenticated user
@@ -92,10 +92,6 @@ func HandleDashboard(w http.ResponseWriter, r *http.Request) {
 
 }
 
-// HandleDashboardStarred will serve the starred projects of a user
-func HandleDashboardStarred(w http.ResponseWriter, r *http.Request) {
-
-}
 
 // HandleLogout ends the authenticated user's session
 func HandleLogout(w http.ResponseWriter, r *http.Request) {
