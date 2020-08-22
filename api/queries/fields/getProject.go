@@ -10,8 +10,8 @@ import (
 	"fmt"
 )
 
-// Project is a field to get a project by ID
-var Project = &graphql.Field {
+// GetProject is a field to get a project by ID
+var GetProject = &graphql.Field {
 	Type:        types.ProjectType,
 	Description: "Get Project By ID",
 	Args: graphql.FieldConfigArgument{

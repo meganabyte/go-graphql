@@ -10,8 +10,8 @@ import (
 	"fmt"
 )
 
-// Guest is a field to get a project by email
-var Guest = &graphql.Field {
+// GetGuest is a field to get a project by email
+var GetGuest = &graphql.Field {
 	Type:        types.GuestType,
 	Description: "Get Guest By email",
 	Args: graphql.FieldConfigArgument{

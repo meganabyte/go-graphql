@@ -9,10 +9,10 @@ import (
 var RootQuery = graphql.NewObject(graphql.ObjectConfig{
 	Name: "RootQuery",
 	Fields: graphql.Fields{
-	  "project": fields.Project,
-	  "allProjects": fields.AllProjects,
-	  "student": fields.Student,
-	  "guest": fields.Guest,
+	  "project": fields.GetProject,
+	  "allProjects": fields.GetAllProjects,
+	  "student": fields.GetStudent,
+	  "guest": fields.GetGuest,
 	},
 })
 

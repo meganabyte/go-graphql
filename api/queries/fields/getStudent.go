@@ -10,8 +10,8 @@ import (
 	"fmt"
 )
 
-// Student is a field to get a project by email
-var Student = &graphql.Field {
+// GetStudent is a field to get a project by email
+var GetStudent = &graphql.Field {
 	Type:        types.StudentType,
 	Description: "Get Student By email",
 	Args: graphql.FieldConfigArgument{

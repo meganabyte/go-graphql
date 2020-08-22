@@ -10,8 +10,8 @@ import (
 	"fmt"
 )
 
-// AllProjects is a field to get a list of all projects
-var AllProjects = &graphql.Field {
+// GetAllProjects is a field to get a list of all projects
+var GetAllProjects = &graphql.Field {
 	Type:        graphql.NewList(types.ProjectType),
 	Description: "Get Project List",
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
